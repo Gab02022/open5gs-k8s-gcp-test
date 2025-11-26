@@ -28,7 +28,8 @@ El objetivo es demostrar la integración de cargas de trabajo de Telecomunicacio
 ```
 
 # 🚀 Despliegue Rápido
-```bash
+## 1. Infraestructura (GKE)
+```text
 gcloud container clusters create open5gs-gitops \
     --zone us-central1-a \
     --machine-type e2-standard-4 \
