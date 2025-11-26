@@ -1,37 +1,39 @@
-# values.yaml para Open5GS 5G SA en GKE (Ubuntu Node)
+# values.yaml CORREGIDO PARA WRAPPER CHART
 
-# 1. Desactivar componentes 4G 
-mme:
-  enabled: false
-hss:
-  enabled: false
-sgwc:
-  enabled: false
-sgwu:
-  enabled: false
-
-# 2. PCRF Encendido (Obligatorio para que el SMF arranque sin errores de DNS/Diameter)
-pcrf:
-  enabled: true
-
-# 3. WebUI Apagada (Ahorro de recursos y evitamos el problema del InitContainer)
-webui:
-  enabled: false
-
-# 4. Base de Datos (Usamos 'latest' para evitar errores de imágenes viejas)
-mongodb:
-  image:
-    tag: "latest"
-  persistence:
+# LLAVE MAESTRA: Esto le dice a Helm que configure la dependencia 'open5gs'
+open5gs:
+  # 1. Desactivar 4G
+  mme:
     enabled: false
-  arbiter:
+  hss:
+    enabled: false
+  sgwc:
+    enabled: false
+  sgwu:
     enabled: false
 
-# 5. Networking UPF (IP Forwarding para tráfico de datos)
-upf:
-  ip_forwarding: true
+  # 2. PCRF Encendido
+  pcrf:
+    enabled: true
 
-# 6. Global (Política de descarga)
-global:
-  image:
-    pullPolicy: IfNotPresent
+  # 3. WebUI Apagada
+  webui:
+    enabled: false
+
+  # 4. Base de Datos (Latest)
+  mongodb:
+    image:
+      tag: "latest"
+    persistence:
+      enabled: false
+    arbiter:
+      enabled: false
+
+  # 5. Networking UPF
+  upf:
+    ip_forwarding: true
+
+  # 6. Global
+  global:
+    image:
+      pullPolicy: IfNotPresent
