@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: sctp-loader
+  namespace: kube-system
+  labels:
+    app: sctp-loader
+spec:
+  selector:
+    matchLabels:
+      app: sctp-loader
+  template:
+    metadata:
+      labels:
+        app: sctp-loader
+    spec:
+      hostNetwork: true
+      hostPID: true
+      containers:
+        - name: sctp-loader
+          image: alpine        
+          command: ["/bin/sh", "-c", "nsenter --target 1 --mount --uts --ipc --net --pid -- modprobe sctp && echo 'SCTP Cargado OK' && sleep infinity"]
+          securityContext:
+            privileged: true
+          resources:
+            requests:
+              cpu: 10m
+              memory: 10Mi
