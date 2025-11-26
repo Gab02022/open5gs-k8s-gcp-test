@@ -36,3 +36,19 @@ gcloud container clusters create open5gs-gitops \
     --num-nodes 1 \
     --image-type=UBUNTU_CONTAINERD
 ```
+## 2. Instalación de ArgoCD
+```text
+kubectl create namespace argocd
+kubectl apply -n argocd -f [https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml](https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml)
+```
+
+## 3. Sincronización (GitOps)
+```text
+Una vez dentro de ArgoCD, se configuran dos aplicaciones:
+infra-setup: Despliega el sctp-loader para preparar el kernel de los nodos.
+open5gs-core: Despliega la aplicación 5G completa basada en el Helm Chart personalizado.
+```
+# ✅ Estado Final de los Servicios
+
+<img width="724" height="230" alt="image" src="https://github.com/user-attachments/assets/51836457-5198-46cb-9be9-6d5ccebe956d" />
+
