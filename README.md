@@ -25,6 +25,7 @@ El objetivo es demostrar la integración de cargas de trabajo de Telecomunicacio
 │   └── sctp-loader.yaml  # DaemonSet privilegiado para inyección de módulos SCTP
 ├── LESSONS_LEARNED.md    # Bitácora técnica de resolución de problemas (Troubleshooting)
 └── README.md             # Documentación principal
+```
 
 
 🚀 Despliegue Rápido1. Infraestructura (GKE)Se requiere un clúster con nodos Ubuntu para soportar los drivers de telecomunicaciones.Bashgcloud container clusters create open5gs-gitops \
