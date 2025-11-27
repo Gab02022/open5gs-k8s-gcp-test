@@ -1,3 +1,6 @@
+dbURI: "mongodb://open5gs-core-mongodb/open5gs"
+
+# --- 1. POPULATE ---
 populate:
   enabled: true
   image:
@@ -67,7 +70,7 @@ sgwc:
 sgwu:
   enabled: false
 
-# --- 7. WebUI (Arreglada manualmente en el código) ---
+# --- 7. WebUI ---
 webui:
   enabled: true
 
