@@ -65,7 +65,7 @@ spec:
       {{- end }}
       initContainers:
         - name: init
-          image: bitnami/mongodb:latest
+          image: bitnami/mongodb:5.0.30-debian-11-r0
           env:
           - name: DB_URI
             {{- if .Values.dbURI }}
