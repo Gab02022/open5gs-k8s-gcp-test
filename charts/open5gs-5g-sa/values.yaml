@@ -16,7 +16,7 @@ open5gs:
   pcrf:
     enabled: true
 
-# 3. WEBUI ENCENDIDA (Intento de reparación con Chart 2.5.0)
+# 3. WEBUI ENCENDIDA (Intento de reparación con Chart 2.2.6)
   webui:
     enabled: true
     
