@@ -45,9 +45,11 @@ kubectl create namespace argocd
 kubectl apply -n argocd -f [https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml](https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml)
 ```
 **3. GitOps Sync**
+```text
 Once inside ArgoCD, configure two applications:
 infra-setup: Deploys sctp-loader to prepare node kernels.
 open5gs-core: Deploys the full 5G application based on the custom Helm Chart.
+```
 
 <img width="625" height="243" alt="image" src="https://github.com/user-attachments/assets/3a8af73c-4fd0-45b7-bd95-1ccc07a06326" />
 <img width="356" height="341" alt="image" src="https://github.com/user-attachments/assets/0e7c0327-5266-4420-b1e5-22618d657f63" />
