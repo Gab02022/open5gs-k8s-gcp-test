@@ -26,6 +26,18 @@ Durante la integración de Open5GS en un entorno de nube pública (GKE), se enco
 * **Análisis:** Se identificó una condición de carrera donde los servicios intentaban conectarse a la Base de Datos mientras esta se estaba reiniciando por una actualización de imagen.
 * **Solución:** Se validó la capacidad de **Self-Healing** de Kubernetes. Tras estabilizarse la base de datos, los pods dependientes se recuperaron automáticamente o fueron forzados mediante un reinicio de pods.
 
+## 5. Gestión de Software de Terceros (Vendoring & Patching)
+* **El Problema:** El componente **WebUI** fallaba persistentemente en el estado `Init:ImagePullBackOff` o `Init:CrashLoopBackOff`.
+* **Análisis Profundo:**
+    1.  Se descubrió mediante auditoría del código fuente del Helm Chart (versión 2.2.6) que la imagen del `initContainer` estaba **hardcoded** (escrita en piedra) apuntando a una etiqueta inexistente: `bitnami/mongodb:4.4.1-debian-10-r39` o repositorios deprecados (`bitnamilegacy`).
+    2.  Al intentar forzar la imagen `latest` mediante `values.yaml`, el contenedor fallaba con `Exit Code: 127` (Command not found), indicando que los scripts de inicialización del chart no eran compatibles con las versiones más nuevas de MongoDB (v7.0+) que han cambiado la estructura de binarios (mongo shell vs mongosh).
+* **Solución (Técnica de Vendoring):**
+    1.  Se optó por realizar **Vendoring** del Chart: descargar el código fuente al repositorio propio en lugar de referenciarlo remotamente.
+    2.  Se aplicó un parche manual (`sed`) en el archivo `deployment.yaml` para reemplazar la imagen defectuosa por la imagen oficial de Docker **`mongo:5.0`**.
+    3.  Esta versión específica (5.0) demostró tener compatibilidad binaria con los scripts legacy del chart y alta disponibilidad en Docker Hub, resolviendo el bloqueo.
+
+---
+
 ---
 **Conclusión:**
 El despliegue de VNFs (Virtual Network Functions) en Kubernetes requiere un control granular sobre el Sistema Operativo subyacente y una gestión cuidadosa de las dependencias de protocolos legacy, más allá de la orquestación estándar de contenedores web.
