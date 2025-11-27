@@ -18,7 +18,6 @@ Durante la integración de Open5GS en un entorno de nube pública (GKE), se enco
 * **El Problema:** Múltiples componentes (MongoDB, WebUI InitContainer) fallaron con `ImagePullBackOff`.
 * **Hallazgos:**
     1.  **Hardcoding:** El Helm Chart original tenía referencias *hardcoded* a repositorios deprecados (`bitnamilegacy`) dentro de los `initContainers` de la WebUI.
-    2.  **Arquitectura:** Se detectaron errores de compatibilidad de CPU (`no match for platform`) al intentar usar digests SHA256 específicos de ARM64 en nodos x86.
 * **Solución:** Se implementó un Wrapper Chart que sobrescribe las imágenes en el `values.yaml` forzando el uso de tags estables (`latest` o versiones específicas testeada en AMD64).
 
 ## 4. Kubernetes State & Race Conditions
