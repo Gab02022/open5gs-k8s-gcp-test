@@ -1,15 +1,25 @@
+populate:
+  enabled: true
+  image:
+    registry: docker.io
+    repository: gradiant/open5gs-dbctl
+    tag: 0.10.3
+    pullPolicy: IfNotPresent
+  initCommands: []
+
+# --- 2. Base de Datos ---
 mongodb:
   enabled: true
   auth:
     enabled: false
   image:
-    tag: "latest"         
+    tag: "latest"
   persistence:
-    enabled: false         
+    enabled: false
   arbiter:
     enabled: false
 
-
+# --- 3. Plano de Control 5G ---
 amf:
   enabled: true
 ausf:
@@ -33,16 +43,21 @@ udm:
 udr:
   enabled: true
 
+# --- 4. Plano de Usuario ---
 upf:
   enabled: true
-  ip_forwarding: true     
+  ip_forwarding: true
 
+# --- 5. SMF & PCRF ---
 smf:
   enabled: true
   config:
     pcrf:
-      enabled: true        
+      enabled: true 
+pcrf:
+  enabled: true
 
+# --- 6. Legacy 4G (Apagado) ---
 hss:
   enabled: false
 mme:
@@ -52,11 +67,10 @@ sgwc:
 sgwu:
   enabled: false
 
-pcrf:
-  enabled: true            
-
+# --- 7. WebUI (Arreglada manualmente en el código) ---
 webui:
-  enabled: true            
+  enabled: true
+
 global:
   image:
     pullPolicy: IfNotPresent
