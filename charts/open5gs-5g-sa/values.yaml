@@ -16,10 +16,10 @@ open5gs:
   pcrf:
     enabled: true
 
-  # 3. WebUI Apagada
+# 3. WEBUI ENCENDIDA (Intento de reparación con Chart 2.5.0)
   webui:
-    enabled: false
-
+    enabled: true
+    
   # 4. Base de Datos (Latest)
   mongodb:
     image:
