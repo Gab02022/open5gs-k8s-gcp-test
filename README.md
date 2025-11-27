@@ -50,5 +50,8 @@ open5gs-core: Despliega la aplicación 5G completa basada en el Helm Chart perso
 ```
 # ✅ Estado Final de los Servicios
 
-<img width="724" height="230" alt="image" src="https://github.com/user-attachments/assets/51836457-5198-46cb-9be9-6d5ccebe956d" />
+<img width="625" height="243" alt="image" src="https://github.com/user-attachments/assets/8ead1f90-4760-49ba-a4ef-0dda5e844184" />
+
+<img width="356" height="341" alt="image" src="https://github.com/user-attachments/assets/9d351528-5ad8-4f2f-8e71-b7f4e23ad1f2" />
+
 
