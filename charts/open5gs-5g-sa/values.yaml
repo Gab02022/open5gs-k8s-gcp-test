@@ -1,39 +1,32 @@
-# values.yaml CORREGIDO PARA WRAPPER CHART
+# values.yaml (Vendored & Fixed)
+# Nota: Al ser código directo, las variables van en la raíz.
 
-# LLAVE MAESTRA: Esto le dice a Helm que configure la dependencia 'open5gs'
-open5gs:
-  # 1. Desactivar 4G
-  mme:
+mme:
+  enabled: false
+hss:
+  enabled: false
+sgwc:
+  enabled: false
+sgwu:
+  enabled: false
+
+pcrf:
+  enabled: true
+
+webui:
+  enabled: true
+
+mongodb:
+  image:
+    tag: "latest"
+  persistence:
     enabled: false
-  hss:
-    enabled: false
-  sgwc:
-    enabled: false
-  sgwu:
+  arbiter:
     enabled: false
 
-  # 2. PCRF Encendido
-  pcrf:
-    enabled: true
+upf:
+  ip_forwarding: true
 
-# 3. WEBUI ENCENDIDA (Intento de reparación con Chart 2.2.6)
-  webui:
-    enabled: true
-    
-  # 4. Base de Datos (Latest)
-  mongodb:
-    image:
-      tag: "latest"
-    persistence:
-      enabled: false
-    arbiter:
-      enabled: false
-
-  # 5. Networking UPF
-  upf:
-    ip_forwarding: true
-
-  # 6. Global
-  global:
-    image:
-      pullPolicy: IfNotPresent
+global:
+  image:
+    pullPolicy: IfNotPresent
