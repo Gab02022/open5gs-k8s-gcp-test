@@ -65,7 +65,7 @@ spec:
       {{- end }}
       initContainers:
         - name: init
-          image: mongo:5.0
+          image: mongodb:5.0
           env:
           - name: DB_URI
             {{- if .Values.dbURI }}
