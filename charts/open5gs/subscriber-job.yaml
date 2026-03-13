@@ -1,0 +1,112 @@
+---
+# 1. script de Python en la memoria de Kubernetes
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: open5gs-subscriber-script
+  namespace: open5gs
+data:
+  insert_subscribers.py: |
+    import pymongo
+    import sys
+
+    # Conexión a la DB usando el DNS interno de Kubernetes
+    try:
+        client = pymongo.MongoClient("mongodb://open5gs-mongodb:27017/", serverSelectionTimeoutMS=5000)
+        client.server_info() # Fuerza la conexión
+    except pymongo.errors.ServerSelectionTimeoutError:
+        print("MongoDB no está listo aún. El Job se reiniciará.")
+        sys.exit(1)
+
+    db = client["open5gs"]
+    collection = db["subscribers"]
+
+    mcc = "999"
+    mnc = "70"
+    key = "465B5CE8B199B49FAA5F0A2EE238A6BC"
+    opc = "E8ED289DEBA952E4283B54E88E6183CA"
+    apn = "internet"
+    sst = 1
+
+    num_users = 10
+    print(f"Insertando {num_users} suscriptores...")
+
+    for i in range(1, num_users + 1):
+        msin = f"{i:010d}" 
+        imsi = f"{mcc}{mnc}{msin}"
+
+        subscriber_data = {
+            "imsi": imsi,
+            "security": {
+                "k": key,
+                "amf": "8000",
+                "op": None,
+                "opc": opc,
+                "sqn": 0
+            },
+            "ambr": {
+                "downlink": {"value": 1, "unit": 3},
+                "uplink": {"value": 1, "unit": 3}
+            },
+            "slice": [
+                {
+                    "sst": sst,
+                    "default_indicator": True,
+                    "session": [
+                        {
+                            "name": apn,
+                            "type": 3,
+                            "pcc_rule": [],
+                            "ambr": {
+                                "downlink": {"value": 1, "unit": 3},
+                                "uplink": {"value": 1, "unit": 3}
+                            },
+                            "qos": {
+                                "index": 9,
+                                "arp": {
+                                    "priority_level": 8,
+                                    "pre_emption_capability": 1,
+                                    "pre_emption_vulnerability": 1
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+
+        collection.replace_one({"imsi": imsi}, subscriber_data, upsert=True)
+        print(f"Suscriptor {imsi} agregado.")
+
+    print("¡Listo! Base de datos poblada exitosamente.")
+
+---
+# 2.  "Job" que ejecutará el script
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: populate-subscribers-job
+  namespace: open5gs
+  annotations:
+    # Después de crear los demás recursos
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+spec:
+  backoffLimit: 5 # Si falla lo reintentará hasta 5 veces
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: python-injector
+        image: python:3.9-slim
+        command: ["/bin/sh", "-c"]
+        # Instala pymongo al vuelo y corre el script
+        args:
+        - "pip install pymongo && python /scripts/insert_subscribers.py"
+        volumeMounts:
+        - name: script-volume
+          mountPath: /scripts
+      volumes:
+      - name: script-volume
+        configMap:
+          name: open5gs-subscriber-script
